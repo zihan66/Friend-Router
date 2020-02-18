@@ -1,18 +1,23 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+import React, { Component } from 'react';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
+import Login from './src/pages/Login'
+export default class App extends Component{
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar backgroundColor='#5d99c6'
+        barStyle='light-content'
+        />
+        <Login/>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#90caf9',
     alignItems: 'center',
     justifyContent: 'center',
   },
