@@ -20,4 +20,13 @@ def create_app():
     from friend_router.resources import api
     app.register_blueprint(api, url_prefix='/api')
 
+    # These database commands are for testing purpose
+    @app.cli.command('initdb')
+    def initdb():
+        db.create_all()
+
+    @app.cli.command('dropdb')
+    def dropdb():
+        db.drop_all()
+
     return app
