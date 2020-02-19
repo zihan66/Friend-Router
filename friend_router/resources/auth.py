@@ -3,6 +3,9 @@ from flask_jwt_extended import jwt_required, create_access_token
 
 from friend_router.models import User
 
+parser = reqparse.RequestParser()
+parser.add_argument('username', required=True)
+
 class Auth(Resource):
     def post(self):
         """Verify user credentials and generate authorization token."""

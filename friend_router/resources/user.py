@@ -5,9 +5,12 @@ from friend_router.models import User
 
 user_fields = {
     'username': fields.String,
+    'username_full': fields.String,
     'first_name': fields.String,
     'last_name': fields.String,
-    'id': fields.Integer
+    'id': fields.Integer,
+    'created_at': fields.DateTime,
+    'updated_at': fields.DateTime
 }
 
 class User(Resource):
