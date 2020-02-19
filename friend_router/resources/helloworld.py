@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
 
+
 class Hello:
     def __init__(self, name, greeting):
         self.name = name
@@ -7,7 +8,8 @@ class Hello:
 
     @property
     def modern(self):
-        return '{}, {}!'.format(self.greeting.capitalize(), self.name.capitalize())
+        return '{}, {}!'.format(self.greeting.capitalize(),
+            self.name.capitalize())
 
     @property
     def traditional(self):
@@ -16,6 +18,7 @@ class Hello:
     @property
     def original(self):
         return '{}, {}'.format(self.greeting, self.name)
+
 
 hello_fields = {
     'hello': fields.String(attribute='name'),
@@ -26,6 +29,7 @@ hello_fields = {
 
 parser = reqparse.RequestParser()
 parser.add_argument('greeting', default='hello')
+
 
 class HelloWorld(Resource):
     @marshal_with(hello_fields)

@@ -1,10 +1,9 @@
 from . import db
 
 from datetime import datetime
-
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from sqlalchemy.ext.hybrid import hybrid_property
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -16,15 +15,17 @@ class User(db.Model):
     email = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(80))
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow,
+                           nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
+                           nullable=False)
 
-    def __init__(self, username, password=None, first_name=None, last_name=None):
+    def __init__(self, username, password=None,
+                 first_name=None, last_name=None):
         self.first_name = first_name
         self.last_name = last_name
         self.username = username
         self.password = password
-
 
     @hybrid_property
     def username(self):
@@ -72,7 +73,6 @@ class User(db.Model):
 
         if u.password is None or check_password_hash(u.password, password):
             return u
-
 
     def __repr__(self):
         return '<User %r>' % self.username

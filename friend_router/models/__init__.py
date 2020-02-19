@@ -4,4 +4,4 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
-from .user import User
+from .user import User  # noqa
