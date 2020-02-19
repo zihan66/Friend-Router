@@ -17,6 +17,6 @@ def create_app():
     migrate.init_app(app, db)
 
     from friend_router.resources import api
-    api.init_app(app)
+    app.register_blueprint(api, url_prefix='/api')
 
     return app
