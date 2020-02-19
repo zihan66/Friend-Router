@@ -5,15 +5,17 @@ from friend_router.models import User
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', required=True)
+parser.add_argument('password')
 
 class Auth(Resource):
     def post(self):
         """Verify user credentials and generate authorization token."""
         args = parser.parse_args()
-        username = args['username']
+        username = args.get('username')
+        password = args.get('password')
 
         # Check user credential
-        user = User.verify_user(username)
+        user = User.verify_user(username, password)
         if user is None:
             abort(401)
 
