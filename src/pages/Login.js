@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Logo from '../components/Logo';
-import Form from '../components/Form';
+import Form from '../components/Form'
 
 export default class Login extends Component {
     render(){
@@ -9,6 +9,10 @@ export default class Login extends Component {
          <View style={styles.container}>
             <Logo/>
             <Form/>
+            <View style={styles.signup}>
+               <Text style={styles.signupText}>Don't have an account yet?</Text>
+               <Text style={styles.signupButton}>Signup</Text>
+            </View>
          </View>
       )
     }
@@ -16,9 +20,27 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
    container: {
-     flex: 1,
+     flexGrow: 1,
      backgroundColor: '#90caf9',
      alignItems: 'center',
      justifyContent: 'center',
    },
+   signup: {
+      flexGrow: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+   
+      marginBottom:60,
+      
+   },
+   signupText: {
+      color:'white',
+      fontSize: 16,
+   },
+   signupButton: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight:'bold'
+   }
 });
