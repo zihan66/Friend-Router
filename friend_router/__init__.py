@@ -7,7 +7,8 @@ def create_app():
     app.config.from_object('friend_router.config.Config')
     app.config.from_pyfile('app.cfg', silent=True)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'app.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI',
+        'sqlite:///' + os.path.join(app.instance_path, 'app.db'))
 
     from friend_router.auth import jwt
     jwt.init_app(app)
