@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Logo from '../components/Logo';
-import Form from '../components/Form'
+import Form from '../components/Form';
 
 export default class Login extends Component {
     render(){
