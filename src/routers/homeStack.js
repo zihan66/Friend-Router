@@ -5,12 +5,14 @@ import Map from '../pages/Map';
 
 const screens = {
     Home: {
-        screen: Login
+        screen: Login,
+        navigationOptions: { header: null }
     },
-    Map: {
-        screen: Map 
-    }
+    Next: {
+        screen: Map,
+        navigationOptions: { header: null }
+    },
 }
-const homeStack = createStackNavigator(screens, headerMode='none');
+const homeStack = createStackNavigator(screens);
 
 export default createAppContainer(homeStack);

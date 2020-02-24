@@ -3,6 +3,10 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native
 
 export default class Form extends Component {
     render(){
+        const pressHandler = () =>{
+            this.props.navigation.navigate('Next');
+        }
+     
         return(
             <View style={styles.container} >
                 <TextInput style={styles.inputBox} 
@@ -16,7 +20,7 @@ export default class Form extends Component {
                     secureTextEntry = {true}
                     placeholderTextColor = '#5d99c6'
                 />
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={pressHandler}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
                 
