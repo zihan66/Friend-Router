@@ -1,7 +1,8 @@
 from flask_restful import Resource, fields, marshal_with
 from flask_jwt_extended import jwt_required, current_user
 
-from friend_router.models import User
+from .location import location_fields
+
 
 user_fields = {
     'username': fields.String,
@@ -10,10 +11,12 @@ user_fields = {
     'last_name': fields.String,
     'id': fields.Integer,
     'created_at': fields.DateTime,
-    'updated_at': fields.DateTime
+    'updated_at': fields.DateTime,
+    'location': fields.Nested(location_fields)
 }
 
-class User(Resource):
+
+class UserResource(Resource):
     @marshal_with(user_fields, envelope='user')
     @jwt_required
     def get(self):

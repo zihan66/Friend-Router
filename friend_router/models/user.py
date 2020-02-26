@@ -20,6 +20,9 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            nullable=False)
 
+    locations = db.relationship('Location',
+        backref='user', order_by='desc(Location.created_at)')
+
     def __init__(self, username, password=None,
                  first_name=None, last_name=None):
         self.first_name = first_name
@@ -53,6 +56,13 @@ class User(db.Model):
             return
 
         self.password_hash = generate_password_hash(value)
+
+    @property
+    def location(self):
+        try:
+            return self.locations[0]
+        except IndexError:
+            return None
 
     @staticmethod
     def get(username):
