@@ -1,5 +1,6 @@
 import React from 'react';
 import MapView from 'react-native-maps';
+import AppLocation from '../components/Location';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 export default class Map extends React.Component {
@@ -7,6 +8,8 @@ export default class Map extends React.Component {
     return (
       <View style={styles.container}>
         <MapView style={styles.mapStyle} />
+        <AppLocation/>
+
       </View>
     );
   }

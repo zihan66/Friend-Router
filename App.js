@@ -3,8 +3,6 @@ import {StyleSheet, Text, View, StatusBar} from 'react-native';
 import Login from './src/pages/Login';
 import Navigator from './src/routers/homeStack';
 
-
-
 export default class App extends Component{
   render() {
     return (
