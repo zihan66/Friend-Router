@@ -64,6 +64,17 @@ class User(db.Model):
         except IndexError:
             return None
 
+    @property
+    def seconds_since_active(self):
+        if self.location is None:
+            return 2147483647
+        timediff = datetime.utcnow() - self.location.created_at
+        return timediff.total_seconds()
+
+    @property
+    def is_active(self):
+        return self.seconds_since_active <= 30
+
     @staticmethod
     def get(username):
         """Query a user by username."""

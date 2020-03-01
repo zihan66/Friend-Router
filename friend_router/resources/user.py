@@ -14,7 +14,9 @@ user_fields = {
     'id': fields.Integer,
     'created_at': fields.DateTime,
     'updated_at': fields.DateTime,
-    'location': fields.Nested(location_fields, allow_null=True)
+    'location': fields.Nested(location_fields, allow_null=True),
+    'seconds_since_active': fields.Integer,
+    'is_active': fields.Boolean
 }
 
 
