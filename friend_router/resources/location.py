@@ -1,6 +1,8 @@
-from flask_restful import reqparse, Resource, fields, marshal_with
-from flask_jwt_extended import current_user, jwt_required
+from flask_restful import reqparse, fields, marshal_with
+from flask_jwt_extended import current_user
 from friend_router.models import db, Location
+
+from .auth import AuthResource
 
 
 parser = reqparse.RequestParser()
@@ -17,14 +19,12 @@ location_fields = {
 }
 
 
-class LocationResource(Resource):
+class LocationResource(AuthResource):
     @marshal_with(location_fields, envelope='locations')
-    @jwt_required
     def get(self):
         return current_user.locations
 
     @marshal_with(location_fields, envelope='location')
-    @jwt_required
     def post(self):
         args = parser.parse_args()
         location = Location(latitude=args['latitude'],

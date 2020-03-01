@@ -5,4 +5,4 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 from .user import User  # noqa
-from .location import Location
+from .location import Location  # noqa

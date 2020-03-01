@@ -13,6 +13,6 @@ restful = Api(api)
 
 restful.add_resource(HelloWorld, '/hello', '/hello/<string:name>')
 restful.add_resource(Auth, '/authorize')
-restful.add_resource(UserResource, '/user')
+restful.add_resource(UserResource, '/user', '/user/<int:id>')
 restful.add_resource(Users, '/users')
 restful.add_resource(LocationResource, '/location')

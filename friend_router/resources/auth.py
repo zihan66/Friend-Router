@@ -1,5 +1,5 @@
 from flask_restful import reqparse, Resource, abort
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 
 from friend_router.models import User
 
@@ -23,3 +23,7 @@ class Auth(Resource):
         # Generate and return an access token
         access_token = create_access_token(identity=user.id)
         return {'token': access_token}
+
+
+class AuthResource(Resource):
+    method_decorators = [jwt_required]
