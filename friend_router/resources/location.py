@@ -18,6 +18,11 @@ location_fields = {
 
 
 class LocationResource(Resource):
+    @marshal_with(location_fields, envelope='locations')
+    @jwt_required
+    def get(self):
+        return current_user.locations
+
     @marshal_with(location_fields, envelope='location')
     @jwt_required
     def post(self):
