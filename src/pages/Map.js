@@ -1,15 +1,11 @@
 import React from 'react';
-import MapView from 'react-native-maps';
-import AppLocation from '../components/Location';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 export default class Map extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <MapView style={styles.mapStyle} />
-        <AppLocation/>
-
+       <Text>{this.props.navigation.state.params.token} </Text>
       </View>
     );
   }
@@ -21,9 +17,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
+  }
 });

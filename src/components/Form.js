@@ -2,11 +2,32 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
 
 export default class Form extends Component {
-    render(){
-        const pressHandler = () =>{
-            this.props.navigation.navigate('Next');
+    constructor(props){
+        super(props);
+        this.state = 
+        {
+            responseJson : null
         }
-     
+    }
+
+    pressHandler = async() =>{
+        try {
+            let formData = new FormData();
+            formData.append('username', 'admin');
+            formData.append('password', 'admin1');
+            const response = await fetch('https://friendrouter.xyz/api/authorize', {
+                method:'POST',
+                body: formData
+            });
+            this.setState({responseJson: await response.json()});
+        } catch (error) {
+            console.error(error);
+        }
+        
+        this.props.navigation.navigate('Next', {token : this.state.responseJson.token});
+    }
+
+    render(){     
         return(
             <View style={styles.container} >
                 <TextInput style={styles.inputBox} 
@@ -20,7 +41,7 @@ export default class Form extends Component {
                     secureTextEntry = {true}
                     placeholderTextColor = '#5d99c6'
                 />
-                <TouchableOpacity style={styles.button} onPress={pressHandler}>
+                <TouchableOpacity style={styles.button} onPress={this.pressHandler}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
                 
