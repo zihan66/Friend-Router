@@ -15,11 +15,9 @@ export default class Map extends Component {
       longitude: -96.325851,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421},
-      location: null
     }
 
-    this._getLocationAsync();
-    this.sendLocation();
+    this._getLocationAsync().then(this.sendLocation);
   }
 
 
@@ -37,17 +35,22 @@ export default class Map extends Component {
       latitudeDelta: 0.045,
       longitudeDelta: 0.045
     }
-    this.setState({ region: region, location: location});
+    this.setState({ region: region});
+    return location
   }
 
 
-  sendLocation = async() =>{
+  sendLocation = async(location) =>{
     try {
         const response = await fetch('https://friendrouter.xyz/api/location', {
             method:'POST',
-            body: this.state.location,
-            headers: this.props.navigation.state.params.token
+            body: JSON.stringify(location.coords),
+            headers: {'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+                      'Content-Type' : 'application/json'
+          }
         });
+        const responseJson = await response.json();
+        console.log(JSON.stringify(responseJson))
         
     } catch (error) {
         console.error(error);
