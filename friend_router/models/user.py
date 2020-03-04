@@ -37,7 +37,7 @@ class User(db.Model):
     @username.setter
     def username(self, value):
         self.username_full = value
-        self.username_key = value
+        self.username_key = value.lower()
 
         if self.first_name is None:
             self.first_name = value.capitalize()
