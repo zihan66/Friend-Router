@@ -19,7 +19,9 @@ export default class Map extends Component {
       friends: null
     }
 
-    this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
+    setInterval(() => {
+      this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
+    }, 5000);
   }
 
 
@@ -93,7 +95,7 @@ export default class Map extends Component {
     return (
       <View style={styles.container}>
         <MapView style={styles.mapStyle}
-        region={this.state.region}
+         initialRegion={this.state.region}
         showUserLocation
         showCompass={true}
         rotateEnabled={false}
