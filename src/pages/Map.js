@@ -115,7 +115,7 @@ export default class Map extends Component {
 
         coordinate={{latitude: this.state.region.latitude,
             longitude:this.state.region.longitude}}
-            title={"Zihan"}
+            title={this.props.navigation.state.params.name}
             description={"In class"}
             pinColor={'red'}
         >

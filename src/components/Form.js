@@ -6,15 +6,17 @@ export default class Form extends Component {
         super(props);
         this.state = 
         {
-            responseJson : null
+            responseJson : null,
+            username: '',
+            password: '',
         }
     }
 
     pressHandler = async() =>{
         try {
             let formData = new FormData();
-            formData.append('username', 'admin');
-            formData.append('password', 'admin1');
+            formData.append('username', this.state.username);
+            formData.append('password', this.state.password);
             const response = await fetch('https://friendrouter.xyz/api/authorize', {
                 method:'POST',
                 body: formData
@@ -24,22 +26,39 @@ export default class Form extends Component {
             console.error(error);
         }
         
-        this.props.navigation.navigate('Next', {token : this.state.responseJson.token});
+        this.props.navigation.navigate('Next', {token : this.state.responseJson.token}, {name : this.state.username});
     }
+
+
+    // handleChange= (event = {}) => {
+    //     if (event.target.value&&event.target.name == 'username'){
+    //         this.setState({username: event.target.value})
+    //     }
+    //     else if(event.target.value&&event.target.name == 'password'){
+    //         this.setState({password: event.target.value})
+    //     }
+      
+    // }
 
     render(){     
         return(
             <View style={styles.container} >
                 <TextInput style={styles.inputBox} 
+                    name = 'username'
                     underlineColorAndroid={'rgba(0,0,0,0)'} 
                     placeholder = 'Email/Username'
                     placeholderTextColor = '#5d99c6'
+                    onChangeText={(username) => this.setState({username})}
+                    value = {this.state.username}
                 />
                 <TextInput style={styles.inputBox} 
+                    name = 'password'
                     underlineColorAndroid={'rgba(0,0,0,0)'} 
                     placeholder = 'Password'
                     secureTextEntry = {true}
                     placeholderTextColor = '#5d99c6'
+                    onChangeText = {(password) => this.setState({password})}
+                    value = {this.state.password}
                 />
                 <TouchableOpacity style={styles.button} onPress={this.pressHandler}>
                     <Text style={styles.buttonText}>Login</Text>
