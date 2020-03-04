@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import {View, StyleSheet, Dimensions } from 'react-native';
+import {View, StyleSheet, Dimensions, Text} from 'react-native';
 
 
 export default class Map extends Component {
@@ -15,9 +15,11 @@ export default class Map extends Component {
       longitude: -96.325851,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421},
+
+      friends: null
     }
 
-    this._getLocationAsync().then(this.sendLocation);
+    this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
   }
 
 
@@ -55,9 +57,37 @@ export default class Map extends Component {
     } catch (error) {
         console.error(error);
     }
-    
-    this.props.navigation.navigate('Next', {token : this.state.responseJson.token});
 }
+
+  getLocations = async() =>{
+    try{
+      const response = await fetch('https://friendrouter.xyz/api/users', {
+        headers: new Headers({'Authorization' : 'Bearer ' + this.props.navigation.state.params.token
+        })
+      });
+      const responseJson = await response.json();
+      console.log(JSON.stringify(responseJson))  
+      var markers = []
+      for (var i = 0; i < responseJson.users.length; i++){
+          var marker = {};
+          var user = responseJson.users[i];
+          if (user.location == null)
+              continue;
+          marker.title = user.first_name;
+          marker.coordinates = {
+            latitude: user.location.latitude,
+            longitude: user.location.longitude
+          };
+          marker.pinColor = user.is_active ? 'red' : 'wheat';
+          markers.push(marker)
+      }
+      this.setState({friends: markers})
+      }
+      catch (error) {
+        console.error(error);
+      }
+      
+  }
 
   render() {
     return (
@@ -69,13 +99,24 @@ export default class Map extends Component {
         rotateEnabled={false}
         showsMyLocationButton={true}
         >
+        {this.state.friends&&this.state.friends.map((marker, index) => (
+        <MapView.Marker 
+          key ={index}
+          coordinate={marker.coordinates}
+          title={marker.title}
+          pinColor={marker.pinColor}
+          />
+        ))}
+
         <MapView.Marker
+        
+
         coordinate={{latitude: this.state.region.latitude,
             longitude:this.state.region.longitude}}
             title={"Zihan"}
             description={"In class"}
+            pinColor={'red'}
         >
-          
         </MapView.Marker>
 
         </MapView>
@@ -95,4 +136,17 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: 'red',
+},
+pinText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 10,
+},
 });
