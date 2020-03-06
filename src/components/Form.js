@@ -30,16 +30,6 @@ export default class Form extends Component {
     }
 
 
-    // handleChange= (event = {}) => {
-    //     if (event.target.value&&event.target.name == 'username'){
-    //         this.setState({username: event.target.value})
-    //     }
-    //     else if(event.target.value&&event.target.name == 'password'){
-    //         this.setState({password: event.target.value})
-    //     }
-      
-    // }
-
     render(){     
         return(
             <View style={styles.container} >
