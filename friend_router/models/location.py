@@ -5,6 +5,8 @@ from datetime import datetime
 
 # https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates
 class Location(db.Model):
+    """Represents a single location update from a user."""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     latitude = db.Column(db.Float, default=0, nullable=False)
     longitude = db.Column(db.Float, default=0, nullable=False)

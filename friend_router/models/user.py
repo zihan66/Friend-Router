@@ -6,13 +6,20 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 
 class User(db.Model):
+    """Represents on registered user."""
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # Display name shown to other users
     first_name = db.Column(db.String(128), nullable=False)
     last_name = db.Column(db.String(128))
+
+    # Username is unique and case insensitive. However, for display purpose,
+    # the original input by user is preserved, as well as the lowercase version.
     username_full = db.Column(db.String(64), nullable=False)
     username_key = db.Column(db.String(64), unique=True, nullable=False)
 
     email = db.Column(db.String(64), unique=True)
+
     password_hash = db.Column(db.String(80))
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow,
@@ -20,6 +27,7 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            nullable=False)
 
+    # Refer to all of the location updates from the user.
     locations = db.relationship('Location',
         backref='user', order_by='desc(Location.created_at)')
 
@@ -59,6 +67,7 @@ class User(db.Model):
 
     @property
     def location(self):
+        """The latest location of the user. Null if no updates."""
         try:
             return self.locations[0]
         except IndexError:
@@ -66,6 +75,7 @@ class User(db.Model):
 
     @property
     def seconds_since_active(self):
+        """Number of seconds since the last location update."""
         if self.location is None:
             return 2147483647
         timediff = datetime.utcnow() - self.location.created_at
@@ -73,6 +83,7 @@ class User(db.Model):
 
     @property
     def is_active(self):
+        """Return the online status of the user."""
         return self.seconds_since_active <= 30
 
     @staticmethod
