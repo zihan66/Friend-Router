@@ -1,5 +1,6 @@
 from flask import Flask
 from os.path import join
+from os import environ
 
 
 def create_app():
@@ -10,7 +11,7 @@ def create_app():
     app.config.from_pyfile('app.cfg', silent=True)
 
     # Use database in instance path
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI',
+    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URI',
         'sqlite:///' + join(app.instance_path, 'app.db'))
 
     # Initialize JWT (token) authentication
@@ -21,6 +22,9 @@ def create_app():
     from friend_router.models import db, migrate
     db.init_app(app)
     migrate.init_app(app, db)
+
+    from friend_router.marshmallow import ma
+    ma.init_app(app)
 
     # Initialize Flask-RESTFul
     from friend_router.resources import api

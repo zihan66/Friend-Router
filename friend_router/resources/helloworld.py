@@ -1,4 +1,6 @@
-from flask_restful import Resource, reqparse, fields, marshal_with
+from flask_restful import Resource, reqparse
+
+from friend_router.marshmallow import HelloSchema
 
 
 class Hello:
@@ -9,7 +11,7 @@ class Hello:
     @property
     def modern(self):
         return '{}, {}!'.format(self.greeting.capitalize(),
-            self.name.capitalize())
+                                self.name.capitalize())
 
     @property
     def traditional(self):
@@ -20,19 +22,13 @@ class Hello:
         return '{}, {}'.format(self.greeting, self.name)
 
 
-hello_fields = {
-    'hello': fields.String(attribute='name'),
-    'modern': fields.String(),
-    'traditional': fields.String(),
-    'original': fields.String()
-}
-
 parser = reqparse.RequestParser()
 parser.add_argument('greeting', default='hello')
 
 
 class HelloWorld(Resource):
-    @marshal_with(hello_fields)
     def get(self, name='world'):
         args = parser.parse_args()
-        return Hello(name, args['greeting'])
+        hello = Hello(name, args['greeting'])
+        schema = HelloSchema()
+        return schema.dump(hello)
