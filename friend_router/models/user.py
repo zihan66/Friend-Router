@@ -3,6 +3,7 @@ from . import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.associationproxy import association_proxy
 
 
 class User(db.Model):
@@ -27,9 +28,30 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,
                            nullable=False)
 
-    # Refer to all of the location updates from the user.
-    locations = db.relationship('Location',
-        backref='user', order_by='desc(Location.created_at)')
+    # Refer to all of the location updates from the user, in descending order
+    locations = db.relationship(
+        'Location', backref='user', order_by='desc(Location.created_at)')
+
+    friends_forward = db.relationship(
+        'Friendship', foreign_keys='Friendship.user_id', backref='user')
+
+    friends_backward = db.relationship(
+        'Friendship', foreign_keys='Friendship.friend_id', backref='friend')
+
+    friend_requests_forward = db.relationship(
+        'FriendRequest', foreign_keys='FriendRequest.user_id', backref='user')
+
+    friend_requests_backward = db.relationship(
+        'FriendRequest', foreign_keys='FriendRequest.friend_id',
+        backref='friend')
+
+    friends_with = association_proxy('friends_forward', 'friend')
+    friends_back = association_proxy('friends_backward', 'user')
+
+    friend_requests_with = association_proxy(
+        'friend_requests_forward', 'friend')
+    friend_requests_back = association_proxy(
+        'friend_requests_backward', 'user')
 
     def __init__(self, username, password=None,
                  first_name=None, last_name=None):
@@ -60,6 +82,7 @@ class User(db.Model):
 
     @password.setter
     def password(self, value):
+        """Convert the password into hash and store in database."""
         if value is None:
             return
 
@@ -67,7 +90,7 @@ class User(db.Model):
 
     @property
     def location(self):
-        """The latest location of the user. Null if no updates."""
+        """Return the latest location of the user. Null if no updates."""
         try:
             return self.locations[0]
         except IndexError:
@@ -75,7 +98,7 @@ class User(db.Model):
 
     @property
     def seconds_since_active(self):
-        """Number of seconds since the last location update."""
+        """Return the number of seconds since the last location update."""
         if self.location is None:
             return 2147483647
         timediff = datetime.utcnow() - self.location.created_at
@@ -85,6 +108,16 @@ class User(db.Model):
     def is_active(self):
         """Return the online status of the user."""
         return self.seconds_since_active <= 30
+
+    @property
+    def friends(self):
+        """Return confirmed friends of the user."""
+        return self.friends_with + self.friends_back
+
+    @property
+    def friend_requests(self):
+        """Return all friend requests."""
+        return self.friend_requests_with + self.friend_requests_back
 
     @staticmethod
     def get(username):

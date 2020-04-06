@@ -6,3 +6,5 @@ migrate = Migrate()
 
 from .user import User  # noqa
 from .location import Location  # noqa
+from .friendship import Friendship  # noqa
+from .friendrequest import FriendRequest  # noqa
