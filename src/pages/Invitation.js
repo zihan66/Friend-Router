@@ -20,10 +20,6 @@ export default class Invitation extends Component {
         this.setState({onFocus:true})
     }
 
-    // hideList = () =>{
-    //     // this.setState({onFocus:false})
-    // }
-
     addFriend = (name) =>{
         var friend = {username: name}
         this.setState({addedContacts: [...this.state.addedContacts, friend]})

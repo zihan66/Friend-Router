@@ -3,6 +3,8 @@ import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import {View, StyleSheet, Dimensions, Text} from 'react-native';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 export default class Map extends Component {
@@ -33,13 +35,13 @@ export default class Map extends Component {
         console.log('Permission to access was denied.')
 
     let location = await Location.getCurrentPositionAsync({enabledHighAccuracy: true});
-    let region = {
+    let current_region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.045,
       longitudeDelta: 0.045
     }
-    this.setState({ region: region});
+    this.setState({ region: current_region});
     return location
   }
 
@@ -54,12 +56,15 @@ export default class Map extends Component {
           }
         });
         const responseJson = await response.json();
-        console.log(JSON.stringify(responseJson))
+        // console.log(JSON.stringify(responseJson))
         
     } catch (error) {
         console.error(error);
     }
 }
+  newInvitation = () =>{
+    this.props.navigation.navigate('Create')
+  }
 
   getLocations = async() =>{
     try{
@@ -77,8 +82,8 @@ export default class Map extends Component {
               continue;
           marker.title = user.first_name;
           marker.coordinates = {
-            latitude: user.location.latitude,
-            longitude: user.location.longitude
+            latitude: user.location.location.latitude,
+            longitude: user.location.location.longitude
           };
           marker.pinColor = user.is_active ? 'red' : 'wheat';
           markers.push(marker)
@@ -104,7 +109,12 @@ export default class Map extends Component {
         {this.state.friends&&this.state.friends.map((marker, index) => (
         <MapView.Marker 
           key ={index}
-          coordinate={marker.coordinates}
+          coordinate={
+            { 
+              latitude: marker.coordinates.latitude,
+              longitude: marker.coordinates.longitude,
+            }
+          }
           title={marker.title}
           pinColor={marker.pinColor}
           />
@@ -113,8 +123,13 @@ export default class Map extends Component {
         <MapView.Marker
         
 
-        coordinate={{latitude: this.state.region.latitude,
-            longitude:this.state.region.longitude}}
+          coordinate={
+              { 
+                latitude: this.state.region.latitude,
+                longitude: this.state.region.longitude
+              }
+            }
+
             title={this.props.navigation.state.params.name}
             description={"In class"}
             pinColor={'red'}
@@ -122,6 +137,15 @@ export default class Map extends Component {
         </MapView.Marker>
 
         </MapView>
+        <ActionButton buttonColor='#90caf9'>
+          <ActionButton.Item buttonColor='#90caf9' title = 'New Invitation' onPress={this.newInvitation}>
+          <Icon name="md-create" style={styles.actionButtonIcon} />   
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#90caf9' title="Received Invitations" onPress={() => {}}>
+            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
+
       </View>
     );
   }
@@ -137,6 +161,7 @@ const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+    zIndex: -1,
   },
   circle: {
     width: 30,
@@ -151,4 +176,7 @@ pinText: {
     fontSize: 20,
     marginBottom: 10,
 },
+button: {
+  position: 'absolute',
+}
 });

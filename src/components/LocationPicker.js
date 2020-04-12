@@ -15,7 +15,7 @@ export default class LocationPicker extends Component{
       return (
         <View style={styles.container}>
           <Dropdown
-            label='Favorite Fruit'
+            label='Select meeting place'
             data={locations}
           />
         </View>
