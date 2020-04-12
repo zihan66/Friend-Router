@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation-stack';
+import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import Login from '../pages/Login';
 import Map from '../pages/Map';
