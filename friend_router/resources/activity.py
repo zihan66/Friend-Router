@@ -16,7 +16,7 @@ from .auth import AuthResource
 activity_args = {
     'destination': fields.Str(required=True),
     'description': fields.Str(required=True),
-    'start_time': fields.Time(required=True),
+    'start_time': fields.DateTime(required=True),
     'participants': fields.List(fields.Str())
 }
 
@@ -33,9 +33,8 @@ class ActivityResource(AuthResource):
         # Create new activity
         activity = Activity(
             destination=destination,
-            description=description)
-        activity.start_time = datetime.combine(
-            datetime.now(), args['start_time'])
+            description=description,
+            start_time=args['start_time'])
 
         # Insert all participants
         push_messages = []
