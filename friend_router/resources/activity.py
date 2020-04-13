@@ -30,11 +30,12 @@ class ActivityResource(AuthResource):
         args = parser.parse(activity_args, request)
         destination = args['destination']
         description = args['description']
+        start_time = args['start_time']
         # Create new activity
         activity = Activity(
             destination=destination,
             description=description,
-            start_time=args['start_time'])
+            start_time=start_time)
 
         # Insert all participants
         push_messages = []
@@ -45,12 +46,23 @@ class ActivityResource(AuthResource):
             if u is None:
                 # abort(404)
                 continue
+
+            title = 'Invitation from %s' % (current_user.first_name)
+            body = 'Meet at %s, %s' % (destination, description)
+            details = 'Location: %s\nTime: %s\nDetails: %s\n' % (
+                destination,
+                start_time.strftime('%c'),
+                description)
             push_messages.extend([PushMessage(
                 to=token.token,
-                title='Invitation from %s' % (current_user.first_name),
-                body='Meet at %s, %s' % (destination, description),
+                title=title,
+                body=body,
                 sound='default',
-                display_in_foreground=True
+                display_in_foreground=True,
+                data={
+                    'title': title,
+                    'details': details,
+                }
             ) for token in u.expo_push_tokens])
             activity.participants.append(u)
 
