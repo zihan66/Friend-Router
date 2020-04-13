@@ -19,8 +19,3 @@ class UserSchema(ma.SQLAlchemySchema):
     location = ma.Nested(LocationSchema)
     seconds_since_active = ma.Int()
     is_active = ma.Bool()
-
-    @post_dump(pass_many=True)
-    def wrap_with_envelope(self, data, many, **kwargs):
-        key = 'users' if many else 'user'
-        return {key: data}

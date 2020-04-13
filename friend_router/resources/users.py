@@ -7,4 +7,4 @@ from .auth import AuthResource
 class Users(AuthResource):
     def get(self):
         schema = UserSchema(many=True)
-        return schema.dump(User.query.all())
+        return {'users': schema.dump(User.query.all())}

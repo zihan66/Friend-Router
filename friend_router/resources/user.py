@@ -20,4 +20,4 @@ class UserResource(AuthResource):
             abort(404, message='User does not exist.')
 
         schema = UserSchema()
-        return schema.dump(user)
+        return {'user': schema.dump(user)}
