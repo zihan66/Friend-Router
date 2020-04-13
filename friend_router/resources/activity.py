@@ -47,7 +47,7 @@ class ActivityResource(AuthResource):
                 continue
             push_messages.extend([PushMessage(
                 to=token.token,
-                title='Invitation',
+                title='Invitation from %s' % (current_user.first_name),
                 body='Meet at %s, %s' % (destination, description),
                 sound='default',
                 display_in_foreground=True
