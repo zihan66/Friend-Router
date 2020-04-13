@@ -56,14 +56,14 @@ export default class Map extends Component {
           }
         });
         const responseJson = await response.json();
-        // console.log(JSON.stringify(responseJson))
         
     } catch (error) {
         console.error(error);
     }
 }
   newInvitation = () =>{
-    this.props.navigation.navigate('Create')
+    console.log(this.state.friends)
+    this.props.navigation.navigate('Create', {users : this.state.friends})
   }
 
   getLocations = async() =>{
@@ -73,7 +73,7 @@ export default class Map extends Component {
         })
       });
       const responseJson = await response.json();
-      console.log(JSON.stringify(responseJson))  
+      // console.log(JSON.stringify(responseJson))  
       var markers = []
       for (var i = 0; i < responseJson.users.length; i++){
           var marker = {};

@@ -6,11 +6,21 @@ import LocationPicker from '../components/LocationPicker';
 export default class Invitation extends Component {
     constructor(props){
         super(props);
+        var friends = []
+        console.log(this.props.navigation.state.params.users)
+        var users = this.props.navigation.state.params.users
+        for (var i = 0; i < users.length ; i++){
+            var user = {}
+            user.name = users[i].title
+            user.is_active = users[i].pinColor == 'red' ? true : false
+            user.is_added = false
+            friends.push(user)
+        }
         this.state = 
         {
           search: '',
-          contacts: [{name: "Zihan", is_active : true, is_added : true}, {name: "Batman", is_active : true, is_added : false}],
-          inMemoryContacts: [{name: "Zihan", is_active : true, is_added : true}, {name: "Batman", is_active : true, is_added : false}],
+          contacts: friends,
+          inMemoryContacts: friends,
           addedContacts: [],
           onFocus: false
         }
@@ -85,7 +95,6 @@ export default class Invitation extends Component {
                     value={search}
                     platform="android"
                     onFocus={this.showList}
-                    onBlur={this.hideList}
                 />
 
             </View>

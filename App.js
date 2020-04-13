@@ -11,7 +11,6 @@ export default class App extends Component{
             <StatusBar backgroundColor='#5d99c6'
               barStyle='light-content'
             />
-          {/* <Invitation/> */}
           <Login/>
           </View>
        </Navigator>
