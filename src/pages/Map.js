@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import {View, StyleSheet, Dimensions, Text} from 'react-native';
+import {View, StyleSheet, Dimensions, Text, Alert} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Notifications } from 'expo';
@@ -144,7 +144,14 @@ export default class Map extends Component {
   componentDidMount() {
     if (!this.state.expoPushToken) {
       this.registerForPushNotificationsAsync();
+      this._notificationSubscription && this._notificationSubscription.remove();
+      this._notificationSubscription = Notifications.addListener(this._handleNotification);
     }
+  }
+
+  _handleNotification = notification => {
+    console.log(notification);
+    Alert.alert(notification.data.title, notification.data.details);
   }
 
   render() {
