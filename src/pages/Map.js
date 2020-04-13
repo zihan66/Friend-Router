@@ -5,6 +5,8 @@ import * as Permissions from 'expo-permissions';
 import {View, StyleSheet, Dimensions, Text} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Notifications } from 'expo';
+import Constants from 'expo-constants';
 
 
 export default class Map extends Component {
@@ -18,7 +20,8 @@ export default class Map extends Component {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421},
 
-      friends: null
+      friends: null,
+      expoPushToken: ''
     }
 
     setInterval(() => {
@@ -94,6 +97,54 @@ export default class Map extends Component {
         console.error(error);
       }
       
+  }
+
+  registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = await Notifications.getExpoPushTokenAsync();
+      console.log(token);
+      this.setState({ expoPushToken: token });
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+
+
+    // Send notification token to server
+    const response = await fetch('https://friendrouter.xyz/api/expopushtoken', {
+      headers: new Headers({
+        'Authorization': 'Bearer ' + this.props.navigation.state.params.token,
+        'Content-Type': 'application/json'
+      }),
+      method: 'POST',
+      body: JSON.stringify({'token': this.state.expoPushToken})
+    });
+
+    console.log(response.status);
+  };
+
+  componentDidMount() {
+    if (!this.state.expoPushToken) {
+      this.registerForPushNotificationsAsync();
+    }
   }
 
   render() {
