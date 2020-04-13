@@ -61,6 +61,8 @@ class User(db.Model):
     activities_participated = association_proxy(
         'activity_participants', 'activity')
 
+    expo_push_tokens = db.relationship('ExpoPushToken', backref='user')
+
     def __init__(self, username, password=None,
                  first_name=None, last_name=None):
         self.first_name = first_name
