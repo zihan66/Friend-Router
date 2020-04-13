@@ -12,7 +12,7 @@ def send_push_message(push_messages):
 
     for response in receipts:
         message = response.push_message
-        token = message.token
+        token = message.to
         try:
             response.validate_response()
         except DeviceNotRegisteredError:
