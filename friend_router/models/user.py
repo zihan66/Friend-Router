@@ -32,10 +32,10 @@ class User(db.Model):
     locations = db.relationship(
         'Location', backref='user', order_by='desc(Location.created_at)')
 
-    friends_forward = db.relationship(
+    friendship_forward = db.relationship(
         'Friendship', foreign_keys='Friendship.user_id', backref='user')
 
-    friends_backward = db.relationship(
+    friendship_backward = db.relationship(
         'Friendship', foreign_keys='Friendship.friend_id', backref='friend')
 
     friend_requests_forward = db.relationship(
@@ -45,13 +45,21 @@ class User(db.Model):
         'FriendRequest', foreign_keys='FriendRequest.friend_id',
         backref='friend')
 
-    friends_with = association_proxy('friends_forward', 'friend')
-    friends_back = association_proxy('friends_backward', 'user')
+    friends_with = association_proxy('friendship_forward', 'friend')
+    friends_back = association_proxy('friendship_backward', 'user')
 
     friend_requests_with = association_proxy(
         'friend_requests_forward', 'friend')
     friend_requests_back = association_proxy(
         'friend_requests_backward', 'user')
+
+    activities_owned = db.relationship(
+        'Activity', foreign_keys='Activity.owner_id', backref='owner')
+    activity_participants = db.relationship(
+        'ActivityParticipant', foreign_keys='ActivityParticipant.user_id',
+        backref='user')
+    activities_participated = association_proxy(
+        'activity_participants', 'activity')
 
     def __init__(self, username, password=None,
                  first_name=None, last_name=None):
@@ -118,6 +126,11 @@ class User(db.Model):
     def friend_requests(self):
         """Return all friend requests."""
         return self.friend_requests_with + self.friend_requests_back
+
+    @property
+    def activities(self):
+        """Return all activities, owned or participated."""
+        return self.activities_owned + self.activities_participated
 
     @staticmethod
     def get(username):
