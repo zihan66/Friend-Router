@@ -9,5 +9,5 @@ class ActivityParticipant(db.Model):
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'),
                             primary_key=True)
 
-    def __init__(self, activity):
-        self.activity = activity
+    def __init__(self, user):
+        self.user = user

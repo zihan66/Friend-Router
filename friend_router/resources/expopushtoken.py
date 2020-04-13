@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from flask_restful import reqparse
+from flask_restful import reqparse, abort
 from flask_jwt_extended import current_user
+from exponent_server_sdk import PushClient
 
 from friend_router.models import db, ExpoPushToken
 from friend_router.marshmallow import ExpoPushTokenSchema
@@ -21,6 +22,8 @@ class ExpoPushTokenResource(AuthResource):
         """Register expo push token."""
         args = parser.parse_args()
         token = args.get('token')
+        if not PushClient.is_exponent_push_token(token):
+            abort(400, message='Invalid push token')
         pushtoken = ExpoPushToken.query.filter_by(token=token).first()
 
         # Update token if token is already registered
