@@ -20,6 +20,7 @@ export default class Map extends Component {
 
       friends: null
     }
+    var token = this.props.navigation.state.params.token
 
     setInterval(() => {
       this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
@@ -63,7 +64,7 @@ export default class Map extends Component {
 }
   newInvitation = () =>{
     console.log(this.state.friends)
-    this.props.navigation.navigate('Create', {users : this.state.friends})
+    this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token})
   }
 
   getLocations = async() =>{

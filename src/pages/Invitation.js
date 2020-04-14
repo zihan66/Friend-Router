@@ -1,13 +1,15 @@
 import { Header, SearchBar, ListItem} from 'react-native-elements';
 import React, { Component } from 'react';
-import {StyleSheet, View, FlatList, Text} from 'react-native';
+import {StyleSheet, View, FlatList, TextInput, Button} from 'react-native';
 import TimePicker from '../components/TimePicker';
 import LocationPicker from '../components/LocationPicker';
 export default class Invitation extends Component {
     constructor(props){
         super(props);
+        this.setLocation = this.setLocation.bind(this)
+        this.setTime = this.setTime.bind(this)
         var friends = []
-        console.log(this.props.navigation.state.params.users)
+        console.log(this.props.navigation.state.params.token)
         var users = this.props.navigation.state.params.users
         for (var i = 0; i < users.length ; i++){
             var user = {}
@@ -22,13 +24,17 @@ export default class Invitation extends Component {
           contacts: friends,
           inMemoryContacts: friends,
           addedContacts: [],
-          onFocus: false
+          onFocus: false,
+          time: new Date(),
+          location: "",
+          note: '',
         }
     }
 
     showList = () =>{
         this.setState({onFocus:true})
     }
+
 
     addFriend = (name) =>{
         var friend = {username: name}
@@ -77,6 +83,48 @@ export default class Invitation extends Component {
         />
     )
 
+    sendList = async() =>{
+        try {
+            var participants = this.state.addedContacts.map(x => x.username);
+            const res = {destination: this.state.location, 
+                    description: this.state.note, 
+                    participants: participants, 
+                    start_time: this.state.time}
+            const response = await fetch('https://friendrouter.xyz/api/activity', {
+                method:'POST',
+                body: JSON.stringify(res),
+                headers: {'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+                          'Content-Type' : 'application/json'
+              }
+            });
+            // const responseJson = await response.json();
+            //  console.log(responseJson)
+            this.props.navigation.goBack()
+
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    setTime = (value) =>{
+        this.setState({
+            time: value
+        })
+    }
+
+    setLocation = (value) =>{
+        this.setState({
+            location: value
+        })
+    }
+
+    setNote = (value) =>{
+        this.setState({
+            note: value
+        })
+    }
+
 
 
   render() {
@@ -116,10 +164,23 @@ export default class Invitation extends Component {
                 />
             </View>
             <View style={{flex: 2}}>
-                <TimePicker/>
+                <TimePicker action={this.setTime}/>
             </View>
             <View style={{flex: 2}}>
-                <LocationPicker/>
+            <LocationPicker action={this.setLocation}/>
+            </View>
+            <View style={{flex: 4}}>
+                <TextInput
+                    style={styles.textinput}
+                    value={this.state.note}
+                    onChangeText={this.setNote}
+                    maxLength = {33}
+                />
+            </View>
+            <View style={{flex: 1}}>
+                <Button
+                title="Press me"
+                onPress={this.sendList}/>
             </View>
         </View>
     )
@@ -141,6 +202,11 @@ const styles = StyleSheet.create({
         paddingBottom: 0,
         paddingHorizontal: 0,
         fontSize: 16,
+    },
+    textinput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
     }
 
     }

@@ -17,6 +17,7 @@ export default class LocationPicker extends Component{
           <Dropdown
             label='Select meeting place'
             data={locations}
+            onChangeText={this.props.action}
           />
         </View>
       )

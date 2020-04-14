@@ -6,13 +6,25 @@ export default class TimePicker extends Component{
         super(props);
         this.state = 
         {
-           show : false
+           show : false,
+           time : new Date()
         }
     }
 
     showTimepicker = () => {
         this.setState({show: true})
     };
+
+    hideTimepicker = () =>{
+        this.setState({show: false})
+    };
+
+    onChange = (event, selected) => {
+        this.hideTimepicker()
+        this.props.action(selected)
+        this.setState({time: selected})
+
+    }
     
     render() {
       return (
@@ -21,14 +33,19 @@ export default class TimePicker extends Component{
                 <Button onPress={this.showTimepicker} title="Select your time" />
             </View>
 
-            {this.state.show&&<View><DateTimePicker
+            {this.state.show&&
+            <View><DateTimePicker
                 mode='time'
-                value={new Date()}
+                display='default'
+                value={new Date(1598051730000)}
                 is24Hour={false}
+                onChange={this.onChange}
             />
             </View>}
+            
         </View>
       )
+    
     }
   }
   
