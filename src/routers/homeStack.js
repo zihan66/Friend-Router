@@ -6,15 +6,15 @@ import Invitation from '../pages/Invitation';
 const screens = {
     Home: {
         screen: Login,
-        navigationOptions: { header: null }
+        navigationOptions: { headerShown: false, headerTitle: 'Login' }
     },
     Next: {
         screen: Map,
-        navigationOptions: { header: null }
+        navigationOptions: { headerShown: false, headerTitle: 'Map' }
     },
     Create: {
         screen: Invitation,
-        navigationOptions: {header: null}
+        navigationOptions: { headerTitle: 'Invitation' }
     }
 }
 const homeStack = createStackNavigator(screens);
