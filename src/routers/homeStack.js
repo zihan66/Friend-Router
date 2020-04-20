@@ -14,7 +14,7 @@ const screens = {
     },
     Create: {
         screen: Invitation,
-        navigationOptions: { headerTitle: 'Invitation' }
+        navigationOptions: { headerShown: false }
     }
 }
 const homeStack = createStackNavigator(screens);

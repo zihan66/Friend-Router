@@ -18,6 +18,7 @@ export default class LocationPicker extends Component{
             label='Select meeting place'
             data={locations}
             onChangeText={this.props.action}
+            baseColor="black"
           />
         </View>
       )

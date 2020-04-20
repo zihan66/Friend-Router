@@ -1,6 +1,6 @@
 import { Header, SearchBar, ListItem} from 'react-native-elements';
 import React, { Component } from 'react';
-import {StyleSheet, View, FlatList, TextInput, Button} from 'react-native';
+import {StyleSheet, View, FlatList, TextInput, Button, Text} from 'react-native';
 import TimePicker from '../components/TimePicker';
 import LocationPicker from '../components/LocationPicker';
 export default class Invitation extends Component {
@@ -144,6 +144,7 @@ export default class Invitation extends Component {
                     platform="android"
                     onFocus={this.showList}
                 />
+                <Text style={{backgroundColor: "#90caf9", fontSize: 16, fontWeight: "bold"}}>Added Friends</Text>
 
             </View>
 
@@ -170,16 +171,18 @@ export default class Invitation extends Component {
             <LocationPicker action={this.setLocation}/>
             </View>
             <View style={{flex: 4}}>
+            <Text style={{backgroundColor: "#90caf9", fontSize: 16, fontWeight: "bold", color: "white"}}>Leave a Message for Your Friends</Text>
                 <TextInput
                     style={styles.textinput}
                     value={this.state.note}
                     onChangeText={this.setNote}
-                    maxLength = {33}
+                    multiline
+                    numberOfLines={4}
                 />
             </View>
             <View style={{flex: 1}}>
                 <Button
-                title="Press me"
+                title="Send Invitation"
                 onPress={this.sendList}/>
             </View>
         </View>
@@ -204,9 +207,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     textinput: {
-        height: 40,
+        height: 80,
         borderColor: 'gray',
         borderWidth: 1,
+        marginTop: 5,
+        fontSize: 14
     }
 
     }
