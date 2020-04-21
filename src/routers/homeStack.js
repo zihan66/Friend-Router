@@ -3,6 +3,7 @@ import {createAppContainer} from 'react-navigation';
 import Login from '../pages/Login';
 import Map from '../pages/Map';
 import Invitation from '../pages/Invitation';
+import InvitationView from '../pages/InvitationView';
 const screens = {
     Home: {
         screen: Login,
@@ -15,6 +16,10 @@ const screens = {
     Create: {
         screen: Invitation,
         navigationOptions: { headerTitle: 'Invitation' }
+    },
+    Invitations: {
+        screen: InvitationView,
+        navigationOptions: { headerTitle: 'Invitations' }
     }
 }
 const homeStack = createStackNavigator(screens);

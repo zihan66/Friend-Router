@@ -70,6 +70,10 @@ export default class Map extends Component {
     this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token})
   }
 
+  viewInvitation = () => {
+    this.props.navigation.navigate('Invitations', { token: this.props.navigation.state.params.token });
+  }
+
   getLocations = async() =>{
     try{
       const response = await fetch('https://friendrouter.xyz/api/users', {
@@ -200,7 +204,7 @@ export default class Map extends Component {
           <ActionButton.Item buttonColor='#90caf9' title = 'New Invitation' onPress={this.newInvitation}>
           <Icon name="md-create" style={styles.actionButtonIcon} />   
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#90caf9' title="Received Invitations" onPress={() => {}}>
+          <ActionButton.Item buttonColor='#90caf9' title="Received Invitations" onPress={this.viewInvitation}>
             <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>
