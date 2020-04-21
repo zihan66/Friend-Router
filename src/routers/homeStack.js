@@ -22,6 +22,13 @@ const screens = {
         navigationOptions: { headerTitle: 'Invitations' }
     }
 }
-const homeStack = createStackNavigator(screens);
+const homeStack = createStackNavigator(screens, {
+    headerMode: 'screen',
+    defaultNavigationOptions: {
+      cardStyle: {
+        backgroundColor: '#FFFFFF'
+      }
+    }
+});
 
 export default createAppContainer(homeStack);

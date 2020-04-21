@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import {View, StyleSheet, Dimensions, Text, Alert} from 'react-native';
+import {View, StyleSheet, Dimensions, Text, Alert } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Notifications } from 'expo';
@@ -21,9 +21,10 @@ export default class Map extends Component {
       longitudeDelta: 0.0421},
 
       friends: null,
-      expoPushToken: ''
+      expoPushToken: '',
+      currentActivity: null,
     }
-    var token = this.props.navigation.state.params.token
+    var token = this.props.navigation.state.params.token;
 
     setInterval(() => {
       this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
