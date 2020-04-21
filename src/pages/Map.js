@@ -25,13 +25,7 @@ export default class Map extends Component {
       currentActivity: null,
     }
     var token = this.props.navigation.state.params.token;
-
-    setInterval(() => {
-      this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
-    }, 5000);
   }
-
-
 
 
   _getLocationAsync = async () => {
@@ -72,7 +66,11 @@ export default class Map extends Component {
   }
 
   viewInvitation = () => {
-    this.props.navigation.navigate('Invitations', { token: this.props.navigation.state.params.token });
+    this.props.navigation.navigate('Invitations', { token: this.props.navigation.state.params.token, onSelectActivity: this.setActivity });
+  }
+
+  setActivity = (activity) => {
+    this.setState({currentActivity: activity});
   }
 
   getLocations = async() =>{
@@ -148,11 +146,19 @@ export default class Map extends Component {
   };
 
   componentDidMount() {
+    this.timer = setInterval(() => {
+      this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
+    }, 5000);
+
     if (!this.state.expoPushToken) {
       this.registerForPushNotificationsAsync();
       this._notificationSubscription && this._notificationSubscription.remove();
       this._notificationSubscription = Notifications.addListener(this._handleNotification);
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   _handleNotification = notification => {

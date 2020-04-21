@@ -81,6 +81,7 @@ export default class InvitationView extends Component {
       refreshing: true
     }
     this._updateActivities();
+    this.onSelectActivity = props.navigation.state.params.onSelectActivity;
   }
 
   _updateActivities = () => {
@@ -105,6 +106,7 @@ export default class InvitationView extends Component {
   }
 
   onPress(activity) {
+    this.onSelectActivity(activity);
     this.props.navigation.navigate('Next', {token: this.state.token, currentActivity: activity});
   }
 
