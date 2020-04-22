@@ -22,7 +22,10 @@ export default class Map extends Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
       },
-      coords: null,
+      coords: {
+        latitude: 30.622370,
+        longitude: -96.325851,
+      },
       friends: null,
       expoPushToken: '',
       currentActivity: null,
@@ -40,15 +43,7 @@ export default class Map extends Component {
 
     let location = await Location.getCurrentPositionAsync({enabledHighAccuracy: true})
 
-    let current_region = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.045,
-      longitudeDelta: 0.045
-    }
-
     this.setState({
-      region: current_region,
       coords: location.coords
     });
 
@@ -113,7 +108,8 @@ export default class Map extends Component {
       
   }
 
-  onRegionChange(region) {
+  onRegionChangeComplete = (region) => {
+    console.log(region);
     this.setState({region});
   }
 
@@ -186,9 +182,10 @@ export default class Map extends Component {
     return (
       <View style={styles.container}>
         <MapView
+          provider="google"
           style={styles.mapStyle}
-          region={this.state.region}
-          showUserLocation
+          initialRegion={this.state.region}
+          showUserLocation={true}
           showCompass={true}
           rotateEnabled={false}
           showsMyLocationButton={true}>
@@ -212,8 +209,8 @@ export default class Map extends Component {
         <MapView.Marker
           coordinate={
               { 
-                latitude: this.state.region.latitude,
-                longitude: this.state.region.longitude
+                latitude: this.state.coords.latitude,
+                longitude: this.state.coords.longitude
               }
             }
 
@@ -223,14 +220,15 @@ export default class Map extends Component {
         >
         
         </MapView.Marker>
-
-        <MapViewDirections
-          origin={{latitude: 30, longitude: 30}}
-          destination={{latitude: 30, longitude: 40}}
-          apikey={GOOGLE_MAPS_API_KEY}
-          strokeWidth={2}
-          strokeColor="red"
-        />
+        { this.state.currentActivity &&
+          <MapViewDirections
+            origin={this.state.coords}
+            destination={this.state.currentActivity}
+            apikey={GOOGLE_MAPS_API_KEY}
+            strokeWidth={2}
+            strokeColor="red"
+          />
+        }
 
         </MapView>
         <ActionButton buttonColor='#90caf9'>
