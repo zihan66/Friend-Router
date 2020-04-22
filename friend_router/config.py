@@ -9,5 +9,6 @@ class Config:
 
     PREDEFINED_LOCATIONS = {
         'zachry': (30.6213739, -96.3401566),
+        'zachary': (30.6213739, -96.3401566),
         'commons': (30.6154181, -96.3371051),
     }
