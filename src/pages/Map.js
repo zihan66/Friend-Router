@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions'
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import {View, StyleSheet, Dimensions, Text, Alert } from 'react-native';
@@ -8,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Notifications } from 'expo';
 import Constants from 'expo-constants';
 
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAJ5ZcSl-31h3H0rs6Nr7xsxEzKdFpL-5s'
 
 export default class Map extends Component {
   constructor(props){
@@ -15,51 +17,59 @@ export default class Map extends Component {
 
     this.state = {
       region: {
-      latitude: 30.622370,
-      longitude: -96.325851,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421},
-
+        latitude: 30.622370,
+        longitude: -96.325851,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      coords: null,
       friends: null,
       expoPushToken: '',
       currentActivity: null,
     }
-    var token = this.props.navigation.state.params.token;
+
+    this.token = this.props.navigation.state.params.token;
   }
 
-
-  _getLocationAsync = async () => {
+  /* Obtain user's current location */
+  getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-      if(status !== 'granted')
-        console.log('Permission to access was denied.')
+    if (status !== 'granted') {
+      console.log('Permission to access was denied.')
+    }
 
-    let location = await Location.getCurrentPositionAsync({enabledHighAccuracy: true});
+    let location = await Location.getCurrentPositionAsync({enabledHighAccuracy: true})
+
     let current_region = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.045,
       longitudeDelta: 0.045
     }
-    this.setState({ region: current_region});
-    return location
+
+    this.setState({
+      region: current_region,
+      coords: location.coords
+    });
+
+    return location;
   }
 
 
-  sendLocation = async(location) =>{
-    try {
-        const response = await fetch('https://friendrouter.xyz/api/location', {
+  sendLocation = () =>{
+    if (!this.state.coords) return;
+
+    fetch('https://friendrouter.xyz/api/location', {
             method:'POST',
-            body: JSON.stringify(location.coords),
-            headers: {'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+            body: JSON.stringify(this.state.coords),
+            headers: {'Authorization' : 'Bearer ' + this.token,
                       'Content-Type' : 'application/json'
           }
-        });
-        const responseJson = await response.json();
-        
-    } catch (error) {
-        console.error(error);
-    }
-}
+    })
+    .then(resp => resp.json())
+    .catch(err => console.log(err))
+  }
+
   newInvitation = () =>{
     console.log(this.state.friends)
     this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token})
@@ -101,6 +111,10 @@ export default class Map extends Component {
         console.error(error);
       }
       
+  }
+
+  onRegionChange(region) {
+    this.setState({region});
   }
 
   registerForPushNotificationsAsync = async () => {
@@ -147,7 +161,9 @@ export default class Map extends Component {
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      this._getLocationAsync().then(this.sendLocation).then(this.getLocations);
+      this.getLocationAsync();
+      this.sendLocation();
+      this.getLocations();
     }, 5000);
 
     if (!this.state.expoPushToken) {
@@ -169,14 +185,16 @@ export default class Map extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <MapView style={styles.mapStyle}
-         initialRegion={this.state.region}
-        showUserLocation
-        showCompass={true}
-        rotateEnabled={false}
-        showsMyLocationButton={true}
-        >
-        {this.state.friends&&this.state.friends.map((marker, index) => (
+        <MapView
+          style={styles.mapStyle}
+          region={this.state.region}
+          showUserLocation
+          showCompass={true}
+          rotateEnabled={false}
+          showsMyLocationButton={true}>
+
+        {/* Mark friend's locations */}
+        {this.state.friends && this.state.friends.map((marker, index) => (
         <MapView.Marker 
           key ={index}
           coordinate={
@@ -190,9 +208,8 @@ export default class Map extends Component {
           />
         ))}
 
+        {/* Mark user's own locations */}
         <MapView.Marker
-        
-
           coordinate={
               { 
                 latitude: this.state.region.latitude,
@@ -204,7 +221,16 @@ export default class Map extends Component {
             description={"In class"}
             pinColor={'red'}
         >
+        
         </MapView.Marker>
+
+        <MapViewDirections
+          origin={{latitude: 30, longitude: 30}}
+          destination={{latitude: 30, longitude: 40}}
+          apikey={GOOGLE_MAPS_API_KEY}
+          strokeWidth={2}
+          strokeColor="red"
+        />
 
         </MapView>
         <ActionButton buttonColor='#90caf9'>
