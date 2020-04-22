@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from flask import request
+from flask import request, current_app
 from flask_jwt_extended import current_user
 from exponent_server_sdk import PushMessage
 
@@ -36,6 +34,13 @@ class ActivityResource(AuthResource):
             destination=destination,
             description=description,
             start_time=start_time)
+
+        # Set latitude & longitude based on pre-defined configuration
+        destination_key = destination.lower()
+        loc_map = current_app.config.get('PREDEFINED_LOCATIONS')
+        if destination_key in loc_map:
+            activity.latitude, activity.longitude = loc_map[destination_key]
+
 
         # Insert all participants
         push_messages = []

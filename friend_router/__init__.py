@@ -39,4 +39,24 @@ def create_app():
     def dropdb():
         db.drop_all()
 
+    # Update the coordinates of pre-defined locations in database
+    @app.cli.command('update_predefined_locations')
+    def update_predefined_locations():
+        from friend_router.models import db, Activity
+        from sqlalchemy import func
+        locations = app.config.get('PREDEFINED_LOCATIONS')
+        if not locations:
+            print('No predefined locations configured!')
+            return
+        for location, coords in locations.items():
+            latitude, longitude = coords
+            activities = Activity.query.filter(
+                func.lower(Activity.destination) == location)
+            activities.latitude = latitude
+            activities.longitude = longitude
+
+        db.session.commit()
+
+
+
     return app
