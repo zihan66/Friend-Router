@@ -52,10 +52,12 @@ def create_app():
             latitude, longitude = coords
             activities = Activity.query.filter(
                 func.lower(Activity.destination) == location)
-            activities.latitude = latitude
-            activities.longitude = longitude
-
+            activities.update({
+                'latitude': latitude,
+                'longitude': longitude
+            }, synchronize_session=False)
         db.session.commit()
+
 
 
 

@@ -8,6 +8,6 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
 
     PREDEFINED_LOCATIONS = {
-        'zachry': (30.621374, -96.340157),
-        'commons': (30.59089, -96.303342),
+        'zachry': (30.6213739, -96.3401566),
+        'commons': (30.6154181, -96.3371051),
     }
