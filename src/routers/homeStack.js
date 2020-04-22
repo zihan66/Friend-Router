@@ -3,6 +3,7 @@ import {createAppContainer} from 'react-navigation';
 import Login from '../pages/Login';
 import Map from '../pages/Map';
 import Invitation from '../pages/Invitation';
+import InvitationView from '../pages/InvitationView';
 const screens = {
     Home: {
         screen: Login,
@@ -17,6 +18,13 @@ const screens = {
         navigationOptions: { headerShown: false }
     }
 }
-const homeStack = createStackNavigator(screens);
+const homeStack = createStackNavigator(screens, {
+    headerMode: 'screen',
+    defaultNavigationOptions: {
+      cardStyle: {
+        backgroundColor: '#FFFFFF'
+      }
+    }
+});
 
 export default createAppContainer(homeStack);
