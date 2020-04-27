@@ -22,7 +22,8 @@ activity_args = {
 class ActivityResource(AuthResource):
     def get(self):
         schema = ActivitySchema(many=True)
-        return schema.dump(current_user.activities)
+        return schema.dump(sorted(current_user.activities,
+                                  key=lambda x: x.start_time))
 
     def post(self):
         args = parser.parse(activity_args, request)
