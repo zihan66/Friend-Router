@@ -66,7 +66,9 @@ export default class Map extends Component {
   }
 
   newInvitation = () =>{
-    console.log(this.state.friends)
+    if (!this.state.friends) {
+      return;
+    }
     this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token})
   }
 
