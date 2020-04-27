@@ -16,6 +16,10 @@ const screens = {
     Create: {
         screen: Invitation,
         navigationOptions: { headerShown: false }
+    },
+    Invitations: {
+        screen: InvitationView,
+        navigationOptions: { headerTitle: 'Invitations' }
     }
 }
 const homeStack = createStackNavigator(screens, {
