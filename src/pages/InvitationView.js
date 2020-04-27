@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, View, SafeAreaView, StyleSheet, Text, RefreshControl, TouchableOpacity } from 'react-native'
+import { FlatList, View, SafeAreaView, StyleSheet, Text, RefreshControl, TouchableOpacity, SectionList } from 'react-native'
 import Constants from 'expo-constants'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faUser, faThumbtack, faClock } from '@fortawesome/free-solid-svg-icons'
@@ -25,6 +25,11 @@ const styles = StyleSheet.create({
     color: '#001436',
     fontSize: 20,
   },
+  header: {
+    padding: 20,
+    fontSize: 32,
+    backgroundColor: "#fff"
+  },
   description: {
     color: '#001436',
     paddingTop: 20,
@@ -34,7 +39,8 @@ const styles = StyleSheet.create({
 
 const formatActivities = (activities) => {
   let activityIds = new Set();
-  let activities2 = [];
+  let upcoming = [];
+  let past = []
 
   activities.forEach(element => {
     // Check repeated ids
@@ -42,10 +48,28 @@ const formatActivities = (activities) => {
       return;
     }
     activityIds.add(element.id);
+    let start_time = moment.utc(element.start_time).local();
 
-    element.start_time = moment(element.start_time).fromNow();
-    activities2.push(element);
+    // Earlier than now
+    if (start_time.diff(moment()) < 0) {
+      element.start_time = start_time.format('MMMM Do YYYY, h:mm a')
+      past.push(element);
+    } else {
+      element.start_time = start_time.format('h:mm a') + ' (' + start_time.fromNow() + ')'
+      upcoming.push(element)
+    }
   });
+
+  let activities2 = [
+    {
+      title: "Upcoming",
+      data: upcoming
+    },
+    {
+      title: "Past",
+      data: past
+    }
+  ]
 
   return activities2;
 }
@@ -113,9 +137,12 @@ export default class InvitationView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={this.state.activities}
+        <SectionList
+          sections={this.state.activities}
           renderItem={({ item }) => <Item item={item} onPress={this.onPress.bind(this)} />}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.header}>{title}</Text>
+          )}
           keyExtractor={item => String(item.id)}
           refreshControl={
             <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh.bind(this)} />
