@@ -235,8 +235,15 @@ export default class Map extends Component {
           <ActionButton.Item buttonColor='#90caf9' title="Received Invitations" onPress={this.viewInvitation}>
             <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
           </ActionButton.Item>
+          <ActionButton.Item buttonColor='#90caf9' title="End Navigation"
+            onPress={() => {this.setState({currentActivity: null})}}>
+            <Icon name="md-exit" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+            
+
         </ActionButton>
 
+        
       </View>
     );
   }
