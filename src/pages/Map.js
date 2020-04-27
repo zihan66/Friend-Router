@@ -29,6 +29,7 @@ export default class Map extends Component {
       friends: null,
       expoPushToken: '',
       currentActivity: null,
+      currentStatus: 'In class'
     }
 
     this.token = this.props.navigation.state.params.token;
@@ -48,6 +49,17 @@ export default class Map extends Component {
     });
 
     return location;
+  }
+
+  getCurrentUser = () => {
+    fetch('https://friendrouter.xyz/api/user', {
+      headers: {'Authorization' : 'Bearer ' + this.token}
+    })
+    .then(resp => resp.json())
+    .then(json => {
+      this.setState({currentStatus: json.user.status})
+    })
+    .catch(err => console.log(err))
   }
 
 
@@ -77,6 +89,7 @@ export default class Map extends Component {
   }
 
   sendStatus = (status) => {
+    this.setState({currentStatus: status})
     fetch('https://friendrouter.xyz/api/status', {
       headers: new Headers({
         'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
@@ -200,6 +213,8 @@ export default class Map extends Component {
       this._notificationSubscription && this._notificationSubscription.remove();
       this._notificationSubscription = Notifications.addListener(this._handleNotification);
     }
+
+    setTimeout(this.getCurrentUser, 200);
   }
 
   componentWillUnmount() {
@@ -248,10 +263,10 @@ export default class Map extends Component {
             }
 
             title={"You"}
-            description={"In class"}
+            description={this.state.currentStatus}
             pinColor={'red'}
         >
-        
+
         </MapView.Marker>
         { this.state.currentActivity &&
           <MapViewDirections
