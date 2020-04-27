@@ -22,6 +22,7 @@ export default class Invitation extends Component {
         {
           search: '',
           contacts: friends,
+          availableContacts: friends,
           inMemoryContacts: friends,
           addedContacts: [],
           onFocus: false,
@@ -42,13 +43,18 @@ export default class Invitation extends Component {
 
     addFriend = (name) =>{
         var friend = {username: name}
-        this.setState({addedContacts: [...this.state.addedContacts, friend]})
-        this.setState({onFocus:false})
+        this.setState({
+            addedContacts: [...this.state.addedContacts, friend],
+            availableContacts: this.state.availableContacts.filter(contact => (contact.name != name)),
+            contacts: this.state.contacts.filter(contact => (contact.name != name)),
+            onFocus: false
+        });
+        console.log(this.state.contacts);
     }
     
     searchContacts = (value) =>{
         this.setState({search: value});
-        const filteredContacts = this.state.inMemoryContacts.filter(
+        const filteredContacts = this.state.availableContacts.filter(
             contact => {
                 let contactLowercase = (contact.name).toLowerCase()
                 let searchTermLowercase = value.toLowerCase()
