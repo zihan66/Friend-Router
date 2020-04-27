@@ -203,10 +203,13 @@ export default class Map extends Component {
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      this.getLocationAsync();
       this.sendLocation();
       this.getLocations();
     }, 5000);
+
+    this.timer2 = setInterval(() => {
+      this.getLocationAsync();
+    }, 1000);
 
     if (!this.state.expoPushToken) {
       this.registerForPushNotificationsAsync();
@@ -219,6 +222,7 @@ export default class Map extends Component {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+    clearInterval(this.timer2);
   }
 
   _handleNotification = notification => {
