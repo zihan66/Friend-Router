@@ -183,8 +183,7 @@ export default class Map extends Component {
           initialRegion={this.state.region}
           showUserLocation={true}
           showCompass={true}
-          rotateEnabled={false}
-          showsMyLocationButton={true}>
+          rotateEnabled={false}>
 
         {/* Mark friend's locations */}
         {this.state.friends && this.state.friends.map((marker, index) => (
