@@ -35,6 +35,10 @@ export default class Invitation extends Component {
         this.setState({onFocus:true})
     }
 
+    hideList = () => {
+        this.setState({onFocus:false})
+    }
+
 
     addFriend = (name) =>{
         var friend = {username: name}
@@ -143,6 +147,7 @@ export default class Invitation extends Component {
                     value={search}
                     platform="android"
                     onFocus={this.showList}
+                    onCancel={this.hideList}
                 />
                 <Text style={{backgroundColor: "#90caf9", fontSize: 16, fontWeight: "bold"}}>Added Friends</Text>
 
