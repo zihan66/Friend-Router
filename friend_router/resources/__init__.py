@@ -12,6 +12,7 @@ from .friendrequest import FriendRequestResource
 from .activity import ActivityResource
 from .expopushtoken import ExpoPushTokenResource
 from .acceptactivity import AcceptActivityResource
+from .status import StatusResource
 
 
 # https://github.com/marshmallow-code/webargs/blob/dev/examples/flaskrestful_example.py
@@ -43,3 +44,4 @@ restful.add_resource(ActivityResource,
 restful.add_resource(ExpoPushTokenResource,
                      '/expo_push_token', '/expopushtoken')
 restful.add_resource(AcceptActivityResource, '/acceptactivity')
+restful.add_resource(StatusResource, '/status')

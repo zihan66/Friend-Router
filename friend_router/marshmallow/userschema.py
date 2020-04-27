@@ -13,6 +13,7 @@ class UserSchema(ma.SQLAlchemySchema):
     username_full = ma.auto_field()
     first_name = ma.auto_field()
     last_name = ma.auto_field()
+    status = ma.auto_field()
     id = ma.auto_field()
     created_at = ma.auto_field()
     updated_at = ma.auto_field()

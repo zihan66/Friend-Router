@@ -21,6 +21,8 @@ class User(db.Model):
 
     email = db.Column(db.String(64), unique=True)
 
+    status = db.Column(db.String(64), default='Free')
+
     password_hash = db.Column(db.String(80))
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow,
