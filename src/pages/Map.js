@@ -234,6 +234,7 @@ export default class Map extends Component {
             apikey={GOOGLE_MAPS_API_KEY}
             strokeWidth={2}
             strokeColor="red"
+            resetOnChange={false}
           /> 
         }
 
