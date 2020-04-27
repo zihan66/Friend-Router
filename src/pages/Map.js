@@ -76,6 +76,30 @@ export default class Map extends Component {
     this.props.navigation.navigate('Invitations', { token: this.props.navigation.state.params.token, onSelectActivity: this.setActivity });
   }
 
+  sendStatus = (status) => {
+    fetch('https://friendrouter.xyz/api/status', {
+      headers: new Headers({
+        'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+        'Content-Type': 'application/json'
+      }),
+      method: 'POST',
+      body: JSON.stringify({'status': status})
+    })
+    .catch(err => console.log(err));
+  }
+
+  updateStatus = () => {
+    Alert.alert(
+      'Update status',
+      'Select your status',
+      [
+        {text: 'In class', onPress: () => this.sendStatus('In class')},
+        {text: 'Free', onPress: () => this.sendStatus('Free')},
+        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+      ]
+    )
+  }
+
   setActivity = (activity) => {
     fetch('https://friendrouter.xyz/api/acceptactivity', {
       headers: new Headers({
@@ -109,6 +133,7 @@ export default class Map extends Component {
             longitude: user.location.location.longitude
           };
           marker.pinColor = user.is_active ? 'red' : 'wheat';
+          marker.status = user.status || 'In class'
           markers.push(marker)
       }
       this.setState({friends: markers});
@@ -208,6 +233,7 @@ export default class Map extends Component {
             }
           }
           title={marker.title}
+          description={marker.status}
           pinColor={marker.pinColor}
           />
         ))}
@@ -221,7 +247,7 @@ export default class Map extends Component {
               }
             }
 
-            title={this.props.navigation.state.params.name}
+            title={"You"}
             description={"In class"}
             pinColor={'red'}
         >
@@ -240,6 +266,10 @@ export default class Map extends Component {
 
         </MapView>
         <ActionButton buttonColor='#90caf9'>
+          <ActionButton.Item buttonColor='#90caf9' title = 'Update Status' onPress={this.updateStatus}>
+          <Icon name="md-globe" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+
           <ActionButton.Item buttonColor='#90caf9' title = 'New Invitation' onPress={this.newInvitation}>
           <Icon name="md-create" style={styles.actionButtonIcon} />   
           </ActionButton.Item>
