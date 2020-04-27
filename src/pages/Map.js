@@ -79,17 +79,16 @@ export default class Map extends Component {
   }
 
   getLocations = async() =>{
-    try{
-      const response = await fetch('https://friendrouter.xyz/api/users', {
+    fetch('https://friendrouter.xyz/api/users', {
         headers: new Headers({'Authorization' : 'Bearer ' + this.props.navigation.state.params.token
         })
-      });
-      const responseJson = await response.json();
-      // console.log(JSON.stringify(responseJson))  
-      var markers = []
-      for (var i = 0; i < responseJson.users.length; i++){
+    })
+    .then(resp => resp.json())
+    .then(json => {
+      var markers = [];
+      for (var i = 0; i < json.users.length; i++){
           var marker = {};
-          var user = responseJson.users[i];
+          var user = json.users[i];
           if (user.location == null)
               continue;
           marker.title = user.first_name;
@@ -100,12 +99,9 @@ export default class Map extends Component {
           marker.pinColor = user.is_active ? 'red' : 'wheat';
           markers.push(marker)
       }
-      this.setState({friends: markers})
-      }
-      catch (error) {
-        console.error(error);
-      }
-      
+      this.setState({friends: markers});
+    })
+    .catch(err => console.log(err));
   }
 
   onRegionChangeComplete = (region) => {
