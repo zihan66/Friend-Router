@@ -77,6 +77,16 @@ export default class Map extends Component {
   }
 
   setActivity = (activity) => {
+    fetch('https://friendrouter.xyz/api/acceptactivity', {
+      headers: new Headers({
+        'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+        'Content-Type': 'application/json'
+      }),
+      method: 'POST',
+      body: JSON.stringify({'id': activity.id})
+    })
+    .catch(err => console.log(err));
+    
     this.setState({currentActivity: activity});
   }
 
@@ -224,7 +234,7 @@ export default class Map extends Component {
             apikey={GOOGLE_MAPS_API_KEY}
             strokeWidth={2}
             strokeColor="red"
-          />
+          /> 
         }
 
         </MapView>
