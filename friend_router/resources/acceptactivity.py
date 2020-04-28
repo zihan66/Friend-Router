@@ -25,6 +25,9 @@ class AcceptActivityResource(AuthResource):
         destination = activity.destination
         description = activity.description
 
+        if current_user.id == owner.id:
+            return {'msg': 'ok'}
+
         title = 'Invitation accepted from %s' % (current_user.first_name)
         body = 'Your invitation: Meet at %s, %s' % (destination, description)
         push = [PushMessage(
