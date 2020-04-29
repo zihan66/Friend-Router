@@ -9,7 +9,6 @@ export default class Invitation extends Component {
         this.setLocation = this.setLocation.bind(this)
         this.setTime = this.setTime.bind(this)
         var friends = []
-        console.log(this.props.navigation.state.params.token)
         var users = this.props.navigation.state.params.users
         for (var i = 0; i < users.length ; i++){
             var user = {}
@@ -29,17 +28,8 @@ export default class Invitation extends Component {
           time: new Date(),
           location: "",
           note: '',
-          locationList: [ "Commons", "Zachry" ]
+          locationList: this.props.navigation.state.params.locationList
         }
-    }
-
-    componentDidMount = () => {
-        fetch('https://friendrouter.xyz/api/locationlist')
-        .then(resp => resp.json())
-        .then(json => {
-            this.setState({locationList: json});
-        })
-        .catch(err => console.log(err));
     }
 
     showList = () =>{

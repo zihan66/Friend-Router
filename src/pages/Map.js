@@ -29,7 +29,8 @@ export default class Map extends Component {
       friends: null,
       expoPushToken: '',
       currentActivity: null,
-      currentStatus: 'In class'
+      currentStatus: 'In class',
+      locationList: [ "Commons", "Zachry" ]
     }
 
     this.token = this.props.navigation.state.params.token;
@@ -81,7 +82,7 @@ export default class Map extends Component {
     if (!this.state.friends) {
       return;
     }
-    this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token})
+    this.props.navigation.navigate('Create', {users : this.state.friends, token : this.props.navigation.state.params.token, locationList: this.state.locationList})
   }
 
   viewInvitation = () => {
@@ -218,6 +219,13 @@ export default class Map extends Component {
     }
 
     setTimeout(this.getCurrentUser, 200);
+
+    fetch('https://friendrouter.xyz/api/locationlist')
+    .then(resp => resp.json())
+    .then(json => {
+        this.setState({locationList: json});
+    })
+    .catch(err => console.log(err));
   }
 
   componentWillUnmount() {

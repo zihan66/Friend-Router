@@ -12,20 +12,18 @@ export default class LocationPicker extends Component{
 
     
     render() {
-      let locations = this.state.locationList.map((val => {
-        return {value: val}
-      }));
-      
-      return (
+        return (
         <View style={styles.container}>
           <Dropdown
             label='Select meeting place'
-            data={locations}
+            data={this.state.locationList.map((val => {
+              return {value: val}
+            }))}
             onChangeText={this.props.action}
             baseColor="black"
           />
         </View>
-      )
+        )
     }
   }
   
