@@ -13,6 +13,7 @@ from .activity import ActivityResource
 from .expopushtoken import ExpoPushTokenResource
 from .acceptactivity import AcceptActivityResource
 from .status import StatusResource
+from .locationlist import LocationListResource
 
 
 # https://github.com/marshmallow-code/webargs/blob/dev/examples/flaskrestful_example.py
@@ -45,3 +46,4 @@ restful.add_resource(ExpoPushTokenResource,
                      '/expo_push_token', '/expopushtoken')
 restful.add_resource(AcceptActivityResource, '/acceptactivity')
 restful.add_resource(StatusResource, '/status')
+restful.add_resource(LocationListResource, '/locationlist')
