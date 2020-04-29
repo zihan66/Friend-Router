@@ -29,7 +29,17 @@ export default class Invitation extends Component {
           time: new Date(),
           location: "",
           note: '',
+          locationList: [ "Commons", "Zachry" ]
         }
+    }
+
+    componentDidMount = () => {
+        fetch('https://friendrouter.xyz/api/locationlist')
+        .then(resp => resp.json())
+        .then(json => {
+            this.setState({locationList: json});
+        })
+        .catch(err => console.log(err));
     }
 
     showList = () =>{
@@ -179,7 +189,7 @@ export default class Invitation extends Component {
                 <TimePicker action={this.setTime}/>
             </View>
             <View style={{flex: 2}}>
-            <LocationPicker action={this.setLocation}/>
+            <LocationPicker action={this.setLocation} locationList={this.state.locationList}/>
             </View>
             <View style={{flex: 4}}>
             <Text style={{backgroundColor: "#90caf9", fontSize: 16, fontWeight: "bold", color: "white"}}>Leave a Message for Your Friends</Text>

@@ -6,12 +6,16 @@ export default class LocationPicker extends Component{
         super(props);
         this.state = 
         {
+          locationList: props.locationList
         }
     }
 
     
     render() {
-      var locations = [{value: 'Commons'}, {value : 'Zachary'}]
+      let locations = this.state.locationList.map((val => {
+        return {value: val}
+      }));
+      
       return (
         <View style={styles.container}>
           <Dropdown
