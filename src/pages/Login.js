@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Logo from '../components/Logo';
-import Form from '../components/Form'
+import Form from '../components/Form';
 
 export default class Login extends Component {
     render(){
       return(
          <View style={styles.container}>
             <Logo/>
-            <Form/>
+            <Form navigation={this.props.navigation}/>
             <View style={styles.signup}>
                <Text style={styles.signupText}>Don't have an account yet?</Text>
                <Text style={styles.signupButton}>Signup</Text>
