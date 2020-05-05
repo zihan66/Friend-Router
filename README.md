@@ -2,6 +2,10 @@
 
 The backend of Friend Router using [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [Flask-RESTFul](http://github.com/twilio/flask-restful).
 
+## Introduction
+
+The main purpose of Friend Router is to simplify group meetups on campus. It is a mobile application, installed on the smart phone of each student (either on an Android phone or iPhone). The system allows students to post their status updates (in class or free), and check their friends' status, so that they can know which friends are potentially available for a meetup. At the same time, they can browse others’ location and choose friends that are close or on the way to the destination. Once a user have selected a list of friends and started to plan the details of a meetup, the system allows the user to send invitations to his or her friends, and eventually provides navigation to the destination. The interface is similar to most instant messaging applications, providing users familiar experiences.
+
 ## Installation
 
 ### Development
@@ -19,200 +23,20 @@ $ flask run
 
 ## API Docs
 
-### Authorization
+The API docs section are moved to the project wiki. Please refer to the project wiki for details.
 
-Authorization is implemented with [Flask-JWT-Extended](https://github.com/vimalloc/flask-jwt-extended). The client needs to obtain an access token, and to access protected resources, include the `Authorization` header.
-
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-```
-
-#### POST /api/authorize
+## License
 
 ```
-POST /api/authorize HTTP/1.1
+# Released under MIT License
 
-{
-    "username": "cat",
-    "password": "mysecretpassword"
-}
-```
+Copyright (c) 2013 Mark Otto.
 
-* username: The username for the user.
-* password: The password for authentication.
+Copyright (c) 2017 Andrew Fong.
 
-```
-HTTP/1.0 200 OK
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-}
-```
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-* token: the bearer access token to authenticate requests following that.
-
-### API Objects
-
-#### User
-
-```
-{
-    "created_at": "Sun, 01 Mar 2020 03:52:41 -0000",
-    "first_name": "Dig",
-    "id": 2,
-    "is_active": true,
-    "last_name": null,
-    "location": {
-        "accuracy": 1.0,
-        "created_at": "Sun, 01 Mar 2020 14:53:20 -0000",
-        "latitude": 10.0,
-        "longitude": 6.0
-    },
-    "seconds_since_active": 0,
-    "updated_at": "Sun, 01 Mar 2020 03:52:41 -0000",
-    "username": "dig",
-    "username_full": "dig"
-}
-```
-
-* `id`: Unique user ID.
-* `username`: Unique user name (always lowercase).
-* `username_full`: Original user name set by the user, with capital letters.
-* `location`: A Location object (`null` if the user has never sent any updates).
-* `seconds_since_active`: Number of seconds since the server receive last update from the user.
-* `is_active`: True if the user is active within the last N seconds. (Default 30 seconds)
-
-#### Location
-
-```
-{
-    "accuracy": 1.23456,
-    "created_at": "Sun, 01 Mar 2020 19:10:42 -0000",
-    "latitude": 2.34567,
-    "longitude": 3.45678
-}
-```
-
-* `created_at`: Time when the user posted the update.
-
-### API Resources
-
-#### GET /api/user
-
-Return the user information of the authenticated user.
-
-```
-GET /api/user HTTP/1.1
-
-{
-    "user": { ... }
-}
-```
-
-* `user`: an User object.
-
-#### GET /api/user/\<id>
-
-Query a specific user given user id.
-
-```
-GET /api/user/1 HTTP/1.1
-
-{
-    "user": { ... }
-}
-```
-
-* `user`: an User object.
-
-#### GET /api/users
-
-Return all registered users.
-
-```
-GET /api/users HTTP/1.1
-
-{
-    "users": [
-        ...
-    ]
-}
-```
-
-* `users`: a list of User objects.
-
-#### POST /api/location
-
-Send user location update to the server.
-
-```
-POST /api/location HTTP/1.1
-
-{
-    "accuracy": "1.23456",
-    "latitude": "2.34567",
-    "longitude": "3.45678"
-}
-```
-
-```
-HTTP/1.0 200 OK
-
-{
-    "location": { ... }
-}
-```
-
-* `location`: A Location object.
-
-#### GET /api/location
-
-Return a list of location history for the authenticated user.
-
-```
-GET /api/location HTTP/1.1
-
-{
-    "locations": [
-        ...
-    ]
-}
-```
-
-* `locations`: A List of Location object.
-
-### API Errors
-
-#### 401 Unauthorized
-
-The authentication token is missing or invalid.
-
-```
-HTTP/1.0 401 UNAUTHORIZED
-
-{
-    "msg": "Missing Authorization Header"
-}
-```
-
-Password is incorrect.
-
-```
-HTTP/1.0 401 UNAUTHORIZED
-
-{
-    "message": "The server could not verify that you are authorized to access the URL requested. You either supplied the wrong credentials (e.g. a bad password), or your browser doesn't understand how to supply the credentials required."
-}
-```
-
-#### 405 Method Not Allowed
-
-The HTTP method is not allowed on the endpoint. Try to use another method (`GET` vs. `POST`).
-
-```
-HTTP/1.0 405 METHOD NOT ALLOWED
-
-{
-    "message": "The method is not allowed for the requested URL."
-}
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
